@@ -13,7 +13,7 @@ const usersSchema = new mongoose.Schema({
             type: String, enum: ['admin', 'client']
         },
         item: {
-            type: mongoose.Types.ObjectId, refPath: 'userType.kind'
+            type: mongoose.Types.ObjectId, ref: 'userType.kind'
         }
     }
 }, {

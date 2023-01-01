@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const usersSchema = new mongoose.Schema({
+const clientSchema = new mongoose.Schema({
     firstName: { 
         type: String,
         require: true,
@@ -10,7 +10,7 @@ const usersSchema = new mongoose.Schema({
     },
 
     age: {
-        type: Int,
+        type: Number,
         require: true
     },
 
@@ -20,7 +20,7 @@ const usersSchema = new mongoose.Schema({
     },
     
 }, {
-    collection: 'client'
+    collection: 'clients'
 });
 
-module.exports = mongoose.model('client', usersSchema);
+module.exports = mongoose.model('clients', clientSchema);

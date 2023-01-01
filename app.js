@@ -4,9 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const {Strategy} = require('passport-local');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/userRoutes');
+
+const {
+  userRoutes,
+  adminRoutes,
+  clientRoutes
+} = require('./routes');
+
+const authMiddleware = require('./middlewares/authMiddleware');
 
 var app = express();
 
@@ -28,8 +36,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+passport.use(new Strategy
+  ((username,password,done) => {
+  authMiddleware.executeLogin(username,password,done)
+}
+));
+//acutal routes
+app.post('/signup', authMiddleware.userSignup);
+app.post('/login',
+passport.initialize(),
+passport.authenticate('local', {
+    session:false,
+    scope:[]
+  }),
+  authMiddleware.generateToken,
+  authMiddleware.respond
+);
+
+//test routes
+// app.use('/', indexRouter);
+app.use('/users', userRoutes);
+app.use('/admins', adminRoutes);
+app.use('/clients', clientRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
