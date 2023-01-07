@@ -6,7 +6,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const {Strategy} = require('passport-local');
-
+const inputMiddleware = require('./middlewares/inputMiddleware');
 
 const {
   userRoutes,
@@ -42,6 +42,7 @@ passport.use(new Strategy
 }
 ));
 //acutal routes
+app.use(inputMiddleware.handleOptions);
 app.post('/signup', authMiddleware.userSignup);
 app.post('/login',
 passport.initialize(),
